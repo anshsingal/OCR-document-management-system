@@ -7,6 +7,10 @@ from kivy.uix.button import Button
 from kivy.uix.image import Image
 from kivy.uix.screenmanager import ScreenManager, Screen
 from .register import *
+from kivy.uix.popup import Popup
+import mysql.connector
+accounts = mysql.connector.connect(host = 'localhost', user = 'root', passwd = 'aaloo', database = 'accounts')
+sql = accounts.cursor()
 
 class login_employee_launch():
     def __init__(self, main_app, screen):
@@ -44,4 +48,20 @@ class login_employee(GridLayout):#innherit class GridLayout
         register_employee_launch(app, "register_employee_screen")
 
     def login_pressed(self, instance):
-        app.screenmanager.current = "enterMenu_screen"
+        sql.execute("SELECT EID FROM employee WHERE EID = %s AND PASSWORD = %s", (self.eid.text, self.password.text))
+        result = sql.fetchall()
+        if len(result) == 0:
+            popup_layout = GridLayout(rows = 2)
+            popup_layout.add_widget(Label(text='Invalid Username / Password'))
+
+            close_popup = Button(text = "Close")
+            popup_layout.add_widget(close_popup)
+
+            invalid_login_popup = Popup(title='Error', content=popup_layout, size_hint=(.3, .3))
+            close_popup.bind(on_press=invalid_login_popup.dismiss)
+            invalid_login_popup.open()
+        else:
+            valid_login_popup = Popup(title='valid_login_popup', content=Label(text='Valid Username and Password'), size_hint=(.5, .5))
+            close_popup = Button(text = "Close")
+            close_popup.bind(on_press=invalid_login_popup.dismiss)
+            invalid_login_popup.open()
