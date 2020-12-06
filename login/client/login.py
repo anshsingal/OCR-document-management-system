@@ -6,6 +6,9 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 from kivy.uix.image import Image
 from kivy.uix.screenmanager import ScreenManager, Screen
+import mysql.connector
+accounts = mysql.connector.connect(host = 'localhost', user = 'root', passwd = 'aaloo', database = 'accounts')
+sql = accounts.cursor()
 from .register import *
 # from predict import pred
 # from matplotlib import pyplot as plt
@@ -49,4 +52,14 @@ class login_client(GridLayout):#innherit class GridLayout
         # self.app.screenmanager.current = "register_client_screen"
 
     def login_pressed(self, instance):
-        app.screenmanager.current = "enterMenu_screen"
+#         app.screenmanager.current = "enterMenu_screen"
+        sql.execute("SELECT CID FROM CLIENT WHERE EXISTS CID = %s AND PASSWORD = %s", (cid.text, password.text))
+        result = sql.fetchall()
+        if len(result) == 0:
+            invalid_login_popup = Popup(title='invalid_login_popuop', content=Label(text='Username / Pasword is incorect'), size_hint=(0.5, 0.5))
+            close_popup = Button(text = "Close")
+            close_popup.bind(on_press=invalid_login_popup.dismiss)
+            invalid_login_popup.open()
+        else:
+            
+            
