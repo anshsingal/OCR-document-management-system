@@ -69,5 +69,6 @@ class login_client(GridLayout):#innherit class GridLayout
         else:
             valid_login_popup = Popup(title='valid_login_popup', content=Label(text='Valid Username and Password'), size_hint=(.5, .5))
             close_popup = Button(text = "Close")
-            close_popup.bind(on_press=invalid_login_popup.dismiss)
-            invalid_login_popup.open()
+            close_popup.bind(on_press=valid_login_popup.dismiss)
+            valid_login_popup.open()
+            app.close()
