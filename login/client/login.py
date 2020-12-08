@@ -71,4 +71,3 @@ class login_client(GridLayout):#innherit class GridLayout
             close_popup = Button(text = "Close")
             close_popup.bind(on_press=valid_login_popup.dismiss)
             valid_login_popup.open()
-            app.close()
