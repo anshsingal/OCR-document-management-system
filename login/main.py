@@ -6,9 +6,9 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 from kivy.uix.image import Image
 from kivy.uix.screenmanager import ScreenManager, Screen
-from client.login import *
-from employee.login import *
-from employee.register import register_employee
+from login.client.login import *
+from login.employee.login import *
+from login.employee.register import register_employee
 
 class enterMenu(GridLayout):#innherit class GridLayout
     def __init__(self, **kwargs):#defining constructor for class page
@@ -20,47 +20,15 @@ class enterMenu(GridLayout):#innherit class GridLayout
         self.client.bind(on_press = self.client_pressed)
         self.add_widget(self.employee)#add label to gridlayout (add_widget is funct of GridLayout)
         self.add_widget(self.client)#add textinput
-        # self.add_widget(self.submit)
 
     def client_pressed(self, instance):
-        login_client_launch(login, "login_client_screen")
+        login_client_launch(app, header, "login_client_screen")
 
     def employee_pressed(self, instance):
-        login_employee_launch(login, "login_employee_screen")
+        login_employee_launch(app, header, "login_employee_screen")
 
-# class outMenu(GridLayout):
-#     def __init__(self, **kwargs):
-#         super().__init__(**kwargs)
-#         #self.setData()
-#         #self.img = predictor.mainmenu.img
-#         #self.result = predictor.mainmenu.result
-#         #print(self.result)
-#         self.rows = 3
-#         self.label = Label(text = "your image was:")
-#
-#         self.image = Image()
-#         self.score = Label()
-#         self.HLayout = GridLayout(cols = 2)
-#         self.HLayout.add_widget(self.image)
-#         self.HLayout.add_widget(self.score)
-#
-#         self.back = Button(text = "Back")
-#         self.back.bind(on_press = self.goBack)
-#
-#         self.add_widget(self.label)
-#         self.add_widget(self.HLayout)
-#         self.add_widget(self.back)
-#         #self.add_widget(self.score)
-#
-#     def setData(self, img1, result1):
-#         self.image.source = img1
-#         self.score.text = "pothole score is: "+result1+"%"
-#
-#     def goBack(self, instance):
-#         predictor.screenmanager.current = "MainMenu"
-
-class Login(App):#calling function
-    def build(self):#.run() funct  of App class (inherited by application) calls the build function. if not found, there is a default definition of a black screen
+class Login():#calling function
+    def __init__(self, **kwargs):#.run() funct  of App class (inherited by application) calls the build function. if not found, there is a default definition of a black screen
         self.screenmanager = ScreenManager()
 
         self.enterMenu_object = enterMenu()
@@ -87,8 +55,10 @@ class Login(App):#calling function
         register_client_screen = Screen(name = 'register_client_screen')
         register_client_screen.add_widget(self.register_client_object)
         self.screenmanager.add_widget(register_client_screen)
-        return self.screenmanager#return an object of class page
-
-if __name__ == "__main__":
-    login = Login()
-    login.run()
+        #return an object of class page
+    def run(self, main_header):
+        global app
+        global header
+        app = self
+        header = main_header
+        return self.screenmanager

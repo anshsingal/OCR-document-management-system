@@ -1,4 +1,6 @@
 import kivy
+import os
+import sys
 from kivy.app import App
 from kivy.uix.label import Label
 from kivy.uix.gridlayout import GridLayout
@@ -6,15 +8,23 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 from kivy.uix.image import Image
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.tabbedpanel import TabbedPanel, TabbedPanelHeader
 from .register import *
 from kivy.uix.popup import Popup
 import mysql.connector
 accounts = mysql.connector.connect(host = 'localhost', user = 'root', passwd = 'aaloo', database = 'accounts')
 sql = accounts.cursor()
 
+uppath = lambda _path, n: os.sep.join(_path.split(os.sep)[:-n])
+app_path = os.path.join(uppath(__file__, 3), 'application')
+sys.path.append(app_path)
+from main import app_home
+
 class login_employee_launch():
-    def __init__(self, main_app, screen):
+    def __init__(self, main_app, main_header, screen):
         global app
+        global header
+        header = main_header
         app = main_app
         app.screenmanager.current = screen
 
@@ -61,7 +71,6 @@ class login_employee(GridLayout):#innherit class GridLayout
             close_popup.bind(on_press=invalid_login_popup.dismiss)
             invalid_login_popup.open()
         else:
-            valid_login_popup = Popup(title='valid_login_popup', content=Label(text='Valid Username and Password'), size_hint=(.5, .5))
-            close_popup = Button(text = "Close")
-            close_popup.bind(on_press=valid_login_popup.dismiss)
-            valid_login_popup.open()
+            th = TabbedPanelHeader(text=self.eid.text)
+            th.content = app_home().run()
+            header.add_widget(th)
