@@ -72,5 +72,5 @@ class login_client(GridLayout):#innherit class GridLayout
             invalid_login_popup.open()
         else:
             th = TabbedPanelHeader(text=self.cid.text)
-            th.content = app_home().run()
+            th.content = app_home().run(self.cid.text)
             header.add_widget(th)
