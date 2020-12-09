@@ -16,9 +16,9 @@ accounts = mysql.connector.connect(host = 'localhost', user = 'root', passwd = '
 sql = accounts.cursor()
 
 uppath = lambda _path, n: os.sep.join(_path.split(os.sep)[:-n])
-app_path = os.path.join(uppath(__file__, 3), 'application')
-sys.path.append(app_path)
-from main import app_home
+app_path_emp = os.path.join(uppath(__file__, 3), 'employee_application')
+sys.path.append(app_path_emp)
+from emp_app import app_home
 
 class login_employee_launch():
     def __init__(self, main_app, main_header, screen):
@@ -31,7 +31,7 @@ class login_employee_launch():
 class login_employee(GridLayout):#innherit class GridLayout
     def __init__(self, **kwargs):#defining constructor for class page
         super().__init__(**kwargs)#defining constructor for class GridLayout
-        self.rows = 3#attribute of GridLayout
+        self.rows = 4#attribute of GridLayout
         self.cols = 2
 
         self.eid_label = Label(text = "Employee ID")
@@ -53,6 +53,14 @@ class login_employee(GridLayout):#innherit class GridLayout
         self.login = Button(text = "Log In")
         self.login.bind(on_press = self.login_pressed)
         self.add_widget(self.login)
+
+        self.back = Button(text = "Back")
+        self.back.bind(on_press = self.back_pressed)
+        self.add_widget(self.back)
+
+    def back_pressed(self, instance):
+        # app.screenmanager.transition = SlideTransition(direction = 'right')
+        app.screenmanager.current = "enterMenu_screen"
 
     def register_pressed(self, instance):
         register_employee_launch(app, "register_employee_screen")

@@ -64,7 +64,6 @@ class MainMenu(GridLayout):
         view_launch(app, 'view_screen')
 
     def logout_pressed(self, instance):
-        # logout_launch(app, header, 'logout_screen')
         header.remove_widget(tab)
         header.clear_widgets()
 
