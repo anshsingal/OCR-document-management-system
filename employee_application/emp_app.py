@@ -8,73 +8,55 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
 from kivy.uix.image import Image
 from kivy.uix.popup import Popup
+from kivy.uix.dropdown import DropDown
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.tabbedpanel import TabbedPanel, TabbedPanelHeader
-from Add_CashFlows import *
-from Create_Transaction import *
-from Enter_Tax_Details import *
-from Summarize import *
-from View import *
+from Main_Menu import *
 # from .Log_Out import *
 # from .mainmenu import *
 
-class MainMenu(GridLayout):
-    def __init__(self, **kwargs):
+class client_select(GridLayout):
+    def __init__(self, eid, **kwargs):
         super().__init__(**kwargs)#defining constructor for class GridLayout
-        self.rows = 6#attribute of GridLayout
+        self.rows = 2#attribute of GridLayout
         self.cols = 1
-
-        self.add_cashflow = Button(text = "Add CashFlows")
-        self.add_cashflow.bind(on_press = self.add_cashflow_pressed)
-        self.add_widget(self.add_cashflow)
-
-        self.create_transaction = Button(text = "Create Transaction")
-        self.create_transaction.bind(on_press = self.create_transaction_pressed)
-        self.add_widget(self.create_transaction)
-
-        self.enter_tax_details = Button(text = "Enter Tax Details")
-        self.enter_tax_details.bind(on_press = self.enter_tax_details_pressed)
-        self.add_widget(self.enter_tax_details)
-
-        self.summarize = Button(text = "Summarize")
-        self.summarize.bind(on_press = self.summarize_pressed)
-        self.add_widget(self.summarize)
-
-        self.view = Button(text = "View")
-        self.view.bind(on_press = self.view_pressed)
-        self.add_widget(self.view)
+        clients_button = Button(text = "Select Client")
+        clients_dropdown = DropDown()
+        sql.execute(f"SELECT * FROM client WHERE E_ID = '{eid}'")
+        clients = sql.fetchall()
+        # print("Getting clients, eid = "+eid)
+        for client in clients:
+            # print(client)
+            cli_option = Button(text = client[7], size_hint_y=None, height=44)
+            cli_option.bind(on_release=lambda btn: clients_dropdown.select(btn.text))
+            clients_dropdown.add_widget(cli_option)
+        clients_button.bind(on_press = clients_dropdown.open)
+        self.add_widget(clients_button)
+        clients_dropdown.bind(on_select = lambda instance, x: main_menu_launch(x, app, "main_menu_screen"))
 
         self.logout = Button(text = "Log Out")
         self.logout.bind(on_press = self.logout_pressed)
         self.add_widget(self.logout)
-
-    def add_cashflow_pressed(self, instance):
-        add_cashflow_launch(app, 'add_cashflow_screen')
-
-    def create_transaction_pressed(self, instance):
-        create_transaction_launch(app, 'create_transaction_screen')
-
-    def enter_tax_details_pressed(self, instance):
-        enter_tax_details_launch(app, 'enter_tax_details_screen')
-
-    def summarize_pressed(self, instance):
-        summarize_launch(app, 'summarize_screen')
-
-    def view_pressed(self, instance):
-        view_launch(app, 'view_screen')
-
+# (on_press = lambda *args: main_menu_launch(client[7], app, "main_menu_screen"))
     def logout_pressed(self, instance):
         header.remove_widget(tab)
         header.clear_widgets()
 
 class app_home():
-    def __init__(self, **kwargs):
+    def __init__(self, main_eid, **kwargs):
         self.screenmanager = ScreenManager()
+        global eid
+        eid = main_eid
 
-        self.MainMenu_object = MainMenu()
-        MainMenu_screen = Screen(name = 'MainMenu_screen')
-        MainMenu_screen.add_widget(self.MainMenu_object)
-        self.screenmanager.add_widget(MainMenu_screen)
+        self.client_select_object = client_select(eid)
+        client_select_screen = Screen(name = 'client_select_screen')
+        client_select_screen.add_widget(self.client_select_object)
+        self.screenmanager.add_widget(client_select_screen)
+
+        self.main_menu_object = main_menu()
+        main_menu_screen = Screen(name = 'main_menu_screen')
+        main_menu_screen.add_widget(self.main_menu_object)
+        self.screenmanager.add_widget(main_menu_screen)
 
         self.add_cashflow_object = add_cashflow()
         add_cashflow_screen = Screen(name = 'add_cashflow_screen')
@@ -105,7 +87,7 @@ class app_home():
         # logout_screen = Screen(name = 'logout_screen')
         # logout_screen.add_widget(self.logout_object)
         # self.screenmanager.add_widget(logout_screen)
-    def run(self, eid, main_header, main_tab):
+    def run(self, main_header, main_tab):
         global app
         global header
         global tab

@@ -80,5 +80,5 @@ class login_employee(GridLayout):#innherit class GridLayout
             invalid_login_popup.open()
         else:
             th = TabbedPanelHeader(text=self.eid.text)
-            th.content = app_home().run(self.eid.text, header, th)
+            th.content = app_home(self.eid.text).run(header, th)
             header.add_widget(th)
