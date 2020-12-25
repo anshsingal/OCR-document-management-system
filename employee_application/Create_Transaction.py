@@ -9,11 +9,12 @@ from kivy.uix.popup import Popup
 from kivy.uix.dropdown import DropDown
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.tabbedpanel import TabbedPanel, TabbedPanelHeader
-from datetime import datetime
+import datetime
 import re
 import mysql.connector
 accounts = mysql.connector.connect(host = 'localhost', user = 'root', passwd = 'aaloo', database = 'accounts')
 sql = accounts.cursor()
+commit = accounts.commit
 
 
 class create_transaction_launch():
@@ -97,20 +98,20 @@ class create_transaction(GridLayout):#innherit class GridLayout
             self.failed_popup()
 
         if self.time.text == 'Now' or self.time.text == 'now':
-            time = datetime.now().strftime("%H:%M")
+            time = datetime.datetime.now().strftime("%H:%M")
         elif re.match(r"^[0-2][0-9]:[0-5][0-9]", self.time.text):
             time = self.time.text
         else:
             self.failed_popup()
 
         if self.date.text == 'today' or self.date.text == 'Today':
-            date = datetime.date.today().strftime("%d/%m/%Y")
+            set_date = datetime.date.today().strftime("%d/%m/%Y")
         elif re.match(r"^[0-3][0-9]/[0-1][0-9]/[0-2][0-9][0-9][0-9]", self.date.text):
-            date = self.date.text
+            set_date = self.date.text
         else:
             self.failed_popup()
 
-        sql.execute("INSERT INTO `keep_in_book` VALUES (%s, %s, %s, %s, %s, %s)", (self.cashflow_id.text, cid, self.book.text, self.amount.text, time, date))
+        sql.execute("INSERT INTO `keep_in_book` VALUES (%s, %s, %s, %s, %s, %s)", (self.chosen_cashflow, cid, self.book.text, self.amount.text, time, set_date))
         commit()
         # back_pressed(None)
         popup_layout = GridLayout(rows = 2)
