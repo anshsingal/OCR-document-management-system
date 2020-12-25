@@ -20,19 +20,19 @@ class client_select(GridLayout):
         super().__init__(**kwargs)#defining constructor for class GridLayout
         self.rows = 2#attribute of GridLayout
         self.cols = 1
-        clients_button = Button(text = "Select Client")
-        clients_dropdown = DropDown()
-        sql.execute(f"SELECT * FROM client WHERE E_ID = '{eid}'")
-        clients = sql.fetchall()
-        # print("Getting clients, eid = "+eid)
-        for client in clients:
-            # print(client)
-            cli_option = Button(text = client[7], size_hint_y=None, height=44)
-            cli_option.bind(on_release=lambda btn: clients_dropdown.select(btn.text))
-            clients_dropdown.add_widget(cli_option)
-        clients_button.bind(on_press = clients_dropdown.open)
-        self.add_widget(clients_button)
-        clients_dropdown.bind(on_select = lambda instance, x: main_menu_launch(x, app, "main_menu_screen"))
+        self.clients_button = Button(text = "Select Client")
+        # self.clients_dropdown = DropDown()
+        # print("EID = ", eid)
+        # sql.execute(f"SELECT * FROM client WHERE E_ID = '{eid}'")
+        # clients = sql.fetchall()
+        # # print("Getting clients, eid = "+eid)
+        # for client in clients:
+        #     # print(client)
+        #     self.cli_option = Button(text = client[7], size_hint_y=None, height=44)
+        #     self.cli_option.bind(on_release=lambda btn: clients_dropdown.select(btn.text))
+        #     self.clients_dropdown.add_widget(self.cli_option)
+        self.clients_button.bind(on_press = self.clients_button_selected)
+        self.add_widget(self.clients_button)
 
         self.logout = Button(text = "Log Out")
         self.logout.bind(on_press = self.logout_pressed)
@@ -41,6 +41,19 @@ class client_select(GridLayout):
     def logout_pressed(self, instance):
         header.remove_widget(tab)
         header.clear_widgets()
+
+    def clients_button_selected(self, instance):
+        self.clients_dropdown = DropDown()
+        print("EID = ", eid)
+        sql.execute(f"SELECT * FROM client WHERE E_ID = '{eid}'")
+        clients = sql.fetchall()
+        for client in clients:
+            # print(client)
+            self.cli_option = Button(text = client[7], size_hint_y=None, height=44)
+            self.cli_option.bind(on_release=lambda btn: self.clients_dropdown.select(btn.text))
+            self.clients_dropdown.add_widget(self.cli_option)
+        self.clients_dropdown.open(self.clients_button)
+        self.clients_dropdown.bind(on_select = lambda instance, x: main_menu_launch(x, app, "main_menu_screen"))
 
 class app_home():
     def __init__(self, main_eid, **kwargs):

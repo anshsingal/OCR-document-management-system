@@ -4,11 +4,11 @@
 import mysql.connector
 accounts = mysql.connector.connect(host = 'localhost', user = 'root', passwd = 'aaloo', database = 'accounts')
 sql = accounts.cursor()
-eid = "binod"
-sql.execute("SELECT * FROM client WHERE E_ID = '{%s}'", (eid))
-result = sql.fetchall()
-for row in result:
-    print(row)
+eid = 'a'
+sql.execute(f"SELECT * FROM client WHERE E_ID = '{eid}'")
+clients = sql.fetchall()
+for client in clients:
+    print(client)
 
 # sql("INSERT INTO client ()")
 # class first(App):
