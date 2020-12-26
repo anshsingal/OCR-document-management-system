@@ -132,9 +132,9 @@ class create_transaction(GridLayout):#innherit class GridLayout
         # success_popup.open()
         # self.back_pressed(None)
         if int(self.amount.text)>0:
-            positive_transaction_launch(cid, app, 'positive_transaction_screen')
+            positive_transaction_launch(self.chosen_cashflow, self.book.text, self.amount.text, set_date, app, 'positive_transaction_screen')
         else:
-            negative_transaction_launch(cid, app, 'negative_transaction_screen')
+            negative_transaction_launch(self.chosen_cashflow, self.book.text, self.amount.text, set_date, app, 'negative_transaction_screen')
 
     def failed_popup(self):
         popup_layout = GridLayout(rows = 2)

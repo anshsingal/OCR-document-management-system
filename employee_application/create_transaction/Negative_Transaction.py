@@ -13,12 +13,23 @@ from kivy.uix.filechooser import FileChooserIconView
 accounts = mysql.connector.connect(host = 'localhost', user = 'root', passwd = 'aaloo', database = 'accounts')
 sql = accounts.cursor()
 commit = accounts.commit
+import pymongo
+from pymongo import MongoClient
+from bson import ObjectId
+client = MongoClient('localhost', 27017)
+db = client['accounts']
 
 class negative_transaction_launch():
-    def __init__(self, main_cid, main_app, screen):
+    def __init__(self, main_cashflow, main_book, main_amount, set_date, main_app, screen):
         global app
-        global cid
-        cid = main_cid
+        global book_no
+        global amount
+        global date
+        global cashflow
+        cashflow = main_cashflow
+        date = set_date
+        book_no = main_book
+        amount = main_amount
         app = main_app
         app.screenmanager.current = screen
 
@@ -52,7 +63,7 @@ class negative_transaction(GridLayout):#innherit class GridLayout
             self.close_popup.bind(on_press = self.reduce_asset_pressed)
         self.popup_layout.add_widget(self.close_popup)
 
-        self.success_popup = Popup(title='Success', content=self.popup_layout, size_hint=(.7, .7))
+        self.success_popup = Popup(title='Choose File', content=self.popup_layout, size_hint=(.7, .7))
         # close_popup.bind(on_press = success_popup.dismiss)
         self.success_popup.open()
 
@@ -61,14 +72,39 @@ class negative_transaction(GridLayout):#innherit class GridLayout
         self.file_path = self.file_chooser.selection
         self.success_popup.dismiss()
         print(self.file_path)
-        self.store_documents()
+        id = self.store_documents()
+        sql.execute("INSERT INTO `asset` VALUES (%s, %s, %s, %s)", (str(id), book_no, cashflow, amount))
+        commit()
+        self.go_back()
+
 
     def add_liability_pressed(self, instance):
         print("you pressed add liability")
         self.file_path = self.file_chooser.selection
         self.success_popup.dismiss()
-        self.store_documents()
+        id = self.store_documents()
+        sql.execute("INSERT INTO `liability` VALUES (%s, %s, %s, %s)", (str(id), book_no, cashflow, amount))
+        commit()
+        self.go_back()
 
 
     def store_documents(self):
         print(self.file_path)
+        with open(self.file_path[0], 'rb') as file:
+            self.data = file.read()
+        id = (db['expense'].insert_one({'file_data': self.data})).inserted_id
+        sql.execute("INSERT INTO `expense` VALUES (%s, %s, %s, %s)", (str(id), book_no, date, amount))
+        commit()
+        return id
+
+    def go_back(self):
+        popup_layout = GridLayout(rows = 2)
+        popup_layout.add_widget(Label(text='Transaction Added'))
+
+        close_popup = Button(text = "OK")
+        popup_layout.add_widget(close_popup)
+
+        success_popup = Popup(title='Success', content=popup_layout, size_hint=(.3, .3))
+        close_popup.bind(on_press = success_popup.dismiss)
+        success_popup.open()
+        app.screenmanager.current = 'main_menu_screen'
