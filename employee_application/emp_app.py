@@ -44,7 +44,7 @@ class client_select(GridLayout):
 
     def clients_button_selected(self, instance):
         self.clients_dropdown = DropDown()
-        print("EID = ", eid)
+        # print("EID = ", eid)
         sql.execute(f"SELECT * FROM client WHERE E_ID = '{eid}'")
         clients = sql.fetchall()
         for client in clients:
@@ -96,10 +96,17 @@ class app_home():
         view_screen.add_widget(self.view_object)
         self.screenmanager.add_widget(view_screen)
 
-        # self.logout_object = logout()
-        # logout_screen = Screen(name = 'logout_screen')
-        # logout_screen.add_widget(self.logout_object)
-        # self.screenmanager.add_widget(logout_screen)
+        self.positive_transaction_object = positive_transaction()
+        positive_transaction_screen = Screen(name = 'positive_transaction_screen')
+        positive_transaction_screen.add_widget(self.positive_transaction_object)
+        self.screenmanager.add_widget(positive_transaction_screen)
+
+        self.negative_transaction_object = negative_transaction()
+        negative_transaction_screen = Screen(name = 'negative_transaction_screen')
+        negative_transaction_screen.add_widget(self.negative_transaction_object)
+        self.screenmanager.add_widget(negative_transaction_screen)
+
+
     def run(self, main_header, main_tab):
         global app
         global header

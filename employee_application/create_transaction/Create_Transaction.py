@@ -10,6 +10,8 @@ from kivy.uix.dropdown import DropDown
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.tabbedpanel import TabbedPanel, TabbedPanelHeader
 import datetime
+from .Positive_Transaction import *
+from .Negative_Transaction import *
 import re
 import mysql.connector
 accounts = mysql.connector.connect(host = 'localhost', user = 'root', passwd = 'aaloo', database = 'accounts')
@@ -64,9 +66,9 @@ class create_transaction(GridLayout):#innherit class GridLayout
         self.back.bind(on_press = self.back_pressed)
         self.add_widget(self.back)
 
-        self.submit = Button(text = "Submit")
-        self.submit.bind(on_press = self.submit_pressed)
-        self.add_widget(self.submit)
+        self.next = Button(text = "Next")
+        self.next.bind(on_press = self.next_pressed)
+        self.add_widget(self.next)
 
 
     def cashflows_button_pressed(self, instance):
@@ -74,7 +76,7 @@ class create_transaction(GridLayout):#innherit class GridLayout
         self.cashflows_dropdown = DropDown()
         sql.execute(f"SELECT CASHFLOW_ID FROM source_of_cashflow WHERE CLIENT_ID = '{cid}'")
         cashflows = sql.fetchall()
-        print("Getting cashflows:")
+        # print("Getting cashflows:")
         for cashflow in cashflows:
             # print(cashflow[0])
             cf_option = Button(text = cashflow[0], size_hint_y=None, height = 44)
@@ -92,10 +94,13 @@ class create_transaction(GridLayout):#innherit class GridLayout
     def back_pressed(self, instance):
         app.screenmanager.current = 'main_menu_screen'
 
-    def submit_pressed(self, instance):
+    def next_pressed(self, instance):
 
+        time = None
+        set_date = None
         if self.chosen_cashflow == None:
             self.failed_popup()
+            return
 
         if self.time.text == 'Now' or self.time.text == 'now':
             time = datetime.datetime.now().strftime("%H:%M")
@@ -103,6 +108,7 @@ class create_transaction(GridLayout):#innherit class GridLayout
             time = self.time.text
         else:
             self.failed_popup()
+            return
 
         if self.date.text == 'today' or self.date.text == 'Today':
             set_date = datetime.date.today().strftime("%d/%m/%Y")
@@ -110,20 +116,25 @@ class create_transaction(GridLayout):#innherit class GridLayout
             set_date = self.date.text
         else:
             self.failed_popup()
+            return
 
         sql.execute("INSERT INTO `keep_in_book` VALUES (%s, %s, %s, %s, %s, %s)", (self.chosen_cashflow, cid, self.book.text, self.amount.text, time, set_date))
         commit()
         # back_pressed(None)
-        popup_layout = GridLayout(rows = 2)
-        popup_layout.add_widget(Label(text='Transaction Added'))
-
-        close_popup = Button(text = "OK")
-        popup_layout.add_widget(close_popup)
-
-        success_popup = Popup(title='Success', content=popup_layout, size_hint=(.3, .3))
-        close_popup.bind(on_press = success_popup.dismiss)
-        success_popup.open()
-        self.back_pressed(None)
+        # popup_layout = GridLayout(rows = 2)
+        # popup_layout.add_widget(Label(text='Transaction Added'))
+        #
+        # close_popup = Button(text = "OK")
+        # popup_layout.add_widget(close_popup)
+        #
+        # success_popup = Popup(title='Success', content=popup_layout, size_hint=(.3, .3))
+        # close_popup.bind(on_press = success_popup.dismiss)
+        # success_popup.open()
+        # self.back_pressed(None)
+        if int(self.amount.text)>0:
+            positive_transaction_launch(cid, app, 'positive_transaction_screen')
+        else:
+            negative_transaction_launch(cid, app, 'negative_transaction_screen')
 
     def failed_popup(self):
         popup_layout = GridLayout(rows = 2)
