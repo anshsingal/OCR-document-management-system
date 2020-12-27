@@ -1,5 +1,4 @@
 import pymongo
-import sys
 from pymongo import MongoClient
 from bson import ObjectId
 client = MongoClient('localhost', 27017)

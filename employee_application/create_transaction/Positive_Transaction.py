@@ -8,6 +8,7 @@ from kivy.uix.image import Image
 from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.tabbedpanel import TabbedPanel, TabbedPanelHeader
+from .tesseract import *
 import mysql.connector
 from kivy.uix.filechooser import FileChooserIconView
 accounts = mysql.connector.connect(host = 'localhost', user = 'root', passwd = 'aaloo', database = 'accounts')
@@ -63,14 +64,14 @@ class positive_transaction(GridLayout):#innherit class GridLayout
             self.close_popup.bind(on_press = self.reduce_liability_pressed)
         self.popup_layout.add_widget(self.close_popup)
 
-        self.success_popup = Popup(title='Success', content=self.popup_layout, size_hint=(.7, .7))
+        self.file_chooser_popup = Popup(title='Choose Files', content=self.popup_layout, size_hint=(.7, .7))
         # close_popup.bind(on_press = success_popup.dismiss)
-        self.success_popup.open()
+        self.file_chooser_popup.open()
 
     def reduce_liability_pressed(self, instance):
+        self.file_chooser_popup.dismiss()
         print("you pressed reduce liability")
         self.file_path = self.file_chooser.selection
-        self.success_popup.dismiss()
         print(self.file_path)
         id = self.store_documents()
         sql.execute("INSERT INTO `liability` VALUES (%s, %s, %s, %s)", (str(id), book_no, cashflow, amount))
@@ -79,9 +80,9 @@ class positive_transaction(GridLayout):#innherit class GridLayout
 
 
     def add_asset_pressed(self, instance):
+        self.file_chooser_popup.dismiss()
         print("you pressed add asset")
         self.file_path = self.file_chooser.selection
-        self.success_popup.dismiss()
         id = self.store_documents()
         sql.execute("INSERT INTO `asset` VALUES (%s, %s, %s, %s)", (str(id), book_no, cashflow, amount))
         commit()
@@ -89,12 +90,15 @@ class positive_transaction(GridLayout):#innherit class GridLayout
 
 
     def store_documents(self):
-        print(self.file_path)
+        # print(self.file_path)
+        self.loading_popup_open()
         with open(self.file_path[0], 'rb') as file:
             self.data = file.read()
-        id = (db['expense'].insert_one({'file_data': self.data})).inserted_id
+        text = convert(self.file_path[0])
+        id = (db['files'].insert_one({'file_data': self.data, 'text': text})).inserted_id
         sql.execute("INSERT INTO `revenue` VALUES (%s, %s, %s, %s)", (str(id), book_no, date, amount))
         commit()
+        self.loading_popup.dismiss()
         return id
 
     def go_back(self):
@@ -108,3 +112,8 @@ class positive_transaction(GridLayout):#innherit class GridLayout
         close_popup.bind(on_press = success_popup.dismiss)
         success_popup.open()
         app.screenmanager.current = 'main_menu_screen'
+
+    def loading_popup_open(self):
+        print("Loading popup")
+        self.loading_popup = Popup(title='Loading', content=Label(text = "Extracting text and uploading documents"), size_hint=(.3, .3))
+        self.loading_popup.open()
