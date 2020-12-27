@@ -8,8 +8,8 @@ from kivy.uix.image import Image
 from kivy.uix.popup import Popup
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.tabbedpanel import TabbedPanel, TabbedPanelHeader
-from Summarize import *
-from View import *
+from client_Summarize import *
+from client_View import *
 # from .Log_Out import *
 # from .mainmenu import *
 

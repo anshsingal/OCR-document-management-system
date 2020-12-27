@@ -84,7 +84,7 @@ class negative_transaction(GridLayout):#innherit class GridLayout
         self.file_path = self.file_chooser.selection
         self.file_chooser_popup.dismiss()
         id = self.store_documents()
-        sql.execute("INSERT INTO `liability` VALUES (%s, %s, %s, %s)", (str(id), book_no, cashflow, amount))
+        sql.execute("INSERT INTO `liability` VALUES (%s, %s, %s, %s)", (str(id), book_no, cashflow, amount[1:]))
         commit()
         self.go_back()
 
@@ -97,7 +97,6 @@ class negative_transaction(GridLayout):#innherit class GridLayout
         text = convert(self.file_path[0])
         id = (db['files'].insert_one({'file_data': self.data, 'text': text})).inserted_id
         sql.execute("INSERT INTO `revenue` VALUES (%s, %s, %s, %s)", (str(id), book_no, date, amount))
-        commit()
         self.loading_popup.dismiss()
         return id
 

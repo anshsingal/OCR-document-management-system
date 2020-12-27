@@ -10,10 +10,9 @@ sql = accounts.cursor()
 # for client in clients:
 #     print(client)
 cid = 'sos'
-name = 'business'
-sql.execute(f"SELECT TAX FROM source_of_cashflow WHERE CLIENT_ID = '{cid}' AND CASHFLOW_ID = '{name}'")
+sql.execute(f"select AMOUNT from liability, client where liability.BOOK_NO = client.BOOK_NO AND client.CLIENT_ID = '{cid}'")
 cashflows = sql.fetchone()
-print(cashflows[0])
+print(cashflows)
 
 # sql("INSERT INTO client ()")
 # class first(App):

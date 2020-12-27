@@ -12,15 +12,13 @@ import mysql.connector
 accounts = mysql.connector.connect(host = 'localhost', user = 'root', passwd = 'aaloo', database = 'accounts')
 sql = accounts.cursor()
 
-class summarize_launch():
-    def __init__(self, main_cid, main_app, screen):
+class client_summarize_launch():
+    def __init__(self, main_app, screen):
         global app
-        global cid
-        cid = main_cid
         app = main_app
         app.screenmanager.current = screen
 
-class summarize(GridLayout):#innherit class GridLayout
+class client_summarize(GridLayout):#innherit class GridLayout
     def __init__(self, **kwargs):#defining constructor for class page
         super().__init__(**kwargs)#defining constructor for class GridLayout
         self.rows = 1

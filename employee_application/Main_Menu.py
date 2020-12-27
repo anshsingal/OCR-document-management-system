@@ -13,6 +13,7 @@ from Add_CashFlows import *
 from create_transaction.Create_Transaction import *
 from create_transaction.Positive_Transaction import *
 from create_transaction.Negative_Transaction import *
+from Summarize.Summarize import *
 from Enter_Tax_Details import *
 from Summarize import *
 from View import *
