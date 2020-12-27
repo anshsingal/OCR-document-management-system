@@ -24,7 +24,7 @@ class add_cashflow_launch():
 class add_cashflow(GridLayout):#innherit class GridLayout
     def __init__(self, **kwargs):#defining constructor for class page
         super().__init__(**kwargs)#defining constructor for class GridLayout
-        self.rows = 4
+        self.rows = 5
         self.cols = 2
 
         self.cashflow_id_label = Label(text = "CashFlow ID")
@@ -42,6 +42,11 @@ class add_cashflow(GridLayout):#innherit class GridLayout
         self.type = TextInput()
         self.add_widget(self.type)
 
+        self.tax_label = Label(text = "Tax Rate")
+        self.add_widget(self.tax_label)
+        self.tax = TextInput()
+        self.add_widget(self.tax)
+
         self.back = Button(text = "Back")
         self.back.bind(on_press = self.back_pressed)
         self.add_widget(self.back)
@@ -54,7 +59,7 @@ class add_cashflow(GridLayout):#innherit class GridLayout
         app.screenmanager.current = 'main_menu_screen'
 
     def submit_pressed(self, instance):
-        sql.execute("INSERT INTO `source_of_cashflow` VALUES (%s, %s, %s, %s)", (self.cashflow_id.text, cid, self.name.text, self.type.text))
+        sql.execute("INSERT INTO `source_of_cashflow` VALUES (%s, %s, %s, %s, %s)", (self.cashflow_id.text, cid, self.name.text, self.type.text, self.tax.text))
         commit()
         # back_pressed(None)
         popup_layout = GridLayout(rows = 2)
