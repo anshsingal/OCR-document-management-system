@@ -1,4 +1,6 @@
 import kivy
+from kivy.config import Config
+Config.set('input', 'mouse', 'mouse,multitouch_on_demand')
 from kivy.app import App
 from kivy.uix.tabbedpanel import TabbedPanel, TabbedPanelHeader
 from login.main import *

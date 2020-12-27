@@ -20,7 +20,7 @@ class register_client_launch():
 class register_client(GridLayout):#innherit class GridLayout
     def __init__(self, **kwargs):#defining constructor for class page
         super().__init__(**kwargs)#defining constructor for class GridLayout
-        self.rows = 10#attribute of GridLayout
+        self.rows = 11#attribute of GridLayout
         self.cols = 2
 
         self.name_label = Label(text = "Name")
@@ -68,6 +68,11 @@ class register_client(GridLayout):#innherit class GridLayout
         self.password = TextInput()
         self.add_widget(self.password)
 
+        self.book_label = Label(text = "Book No.")
+        self.add_widget(self.book_label)
+        self.book = TextInput()
+        self.add_widget(self.book)
+
         self.back = Button(text = "Back to Log-in")
         self.back.bind(on_press = self.back_pressed)
         self.add_widget(self.back)
@@ -77,7 +82,7 @@ class register_client(GridLayout):#innherit class GridLayout
         self.add_widget(self.register)
 
     def register_pressed(self, instance):
-        sql.execute("INSERT INTO `client` VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)", (self.name.text, self.email.text, self.age.text, self.pan.text, self.phone.text, self.aadhar.text, self.eid.text, self.cid.text, self.password.text))
+        sql.execute("INSERT INTO `client` VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)", (self.name.text, self.email.text, self.age.text, self.pan.text, self.phone.text, self.aadhar.text, self.eid.text, self.cid.text, self.password.text, self.book.text))
         commit()
         app.screenmanager.current = "login_client_screen"
 

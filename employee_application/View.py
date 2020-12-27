@@ -13,8 +13,10 @@ accounts = mysql.connector.connect(host = 'localhost', user = 'root', passwd = '
 sql = accounts.cursor()
 
 class view_launch():
-    def __init__(self, main_app, screen):
+    def __init__(self, main_cid, main_app, screen):
         global app
+        global cid
+        cid = main_cid
         app = main_app
         app.screenmanager.current = screen
 
