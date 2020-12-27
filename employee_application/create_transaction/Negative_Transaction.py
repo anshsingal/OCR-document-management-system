@@ -82,7 +82,7 @@ class negative_transaction(GridLayout):#innherit class GridLayout
     def add_liability_pressed(self, instance):
         print("you pressed add liability")
         self.file_path = self.file_chooser.selection
-        self.success_popup.dismiss()
+        self.file_chooser_popup.dismiss()
         id = self.store_documents()
         sql.execute("INSERT INTO `liability` VALUES (%s, %s, %s, %s)", (str(id), book_no, cashflow, amount))
         commit()
