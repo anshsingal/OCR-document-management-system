@@ -129,24 +129,12 @@ class create_transaction(GridLayout):#innherit class GridLayout
         else:
             self.failed_popup()
             return
+        date_time = set_date+' '+time
 
-        sql.execute("INSERT INTO `keep_in_book` VALUES (%s, %s, %s, %s, %s, %s)", (self.chosen_cashflow, cid, self.book.text, self.amount.text, set_date+' '+time, str(self.tax_payed_selected)))
-        commit()
-        # back_pressed(None)
-        # popup_layout = GridLayout(rows = 2)
-        # popup_layout.add_widget(Label(text='Transaction Added'))
-        #
-        # close_popup = Button(text = "OK")
-        # popup_layout.add_widget(close_popup)
-        #
-        # success_popup = Popup(title='Success', content=popup_layout, size_hint=(.3, .3))
-        # close_popup.bind(on_press = success_popup.dismiss)
-        # success_popup.open()
-        # self.back_pressed(None)
         if int(self.amount.text)>0:
-            positive_transaction_launch(self.chosen_cashflow, self.book.text, self.amount.text, set_date, app, 'positive_transaction_screen')
+            positive_transaction_launch(self.chosen_cashflow, self.book.text, self.amount.text, date_time, str(self.tax_payed_selected), app, 'positive_transaction_screen')
         else:
-            negative_transaction_launch(self.chosen_cashflow, self.book.text, self.amount.text, set_date, app, 'negative_transaction_screen')
+            negative_transaction_launch(self.chosen_cashflow, self.book.text, self.amount.text, date_time, str(self.tax_payed_selected), app, 'negative_transaction_screen')
 
     def failed_popup(self):
         popup_layout = GridLayout(rows = 2)
