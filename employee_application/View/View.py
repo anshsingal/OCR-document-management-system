@@ -12,6 +12,7 @@ from kivy.uix.tabbedpanel import TabbedPanel, TabbedPanelHeader
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.slider import Slider
 from kivy.core.window import Window
+from .Search import *
 import mysql.connector
 accounts = mysql.connector.connect(host = 'localhost', user = 'root', passwd = 'aaloo', database = 'accounts')
 sql = accounts.cursor()
@@ -32,7 +33,7 @@ class view_launch():
 class view(GridLayout):#innherit class GridLayout
     def __init__(self, **kwargs):#defining constructor for class page
         super().__init__(**kwargs)#defining constructor for class GridLayout
-        self.rows = 3
+        self.rows = 4
         self.cols = 1
 
         top = GridLayout(rows=1, size_hint_y=0.08)
@@ -44,6 +45,8 @@ class view(GridLayout):#innherit class GridLayout
         assets_button.bind(on_press = self.assets_button_pressed)
         liabilities_button = Button(text = 'Liabilities')
         liabilities_button.bind(on_press = self.liabilities_button_pressed)
+        search_button = Button(text = 'Search')
+        search_button.bind(on_press = self.search_pressed)
         top.add_widget(revenue_button)
         top.add_widget(expense_button)
         top.add_widget(assets_button)
@@ -51,7 +54,7 @@ class view(GridLayout):#innherit class GridLayout
         top.add_widget(Label())
         top.add_widget(Label())
         top.add_widget(Label())
-        top.add_widget(Button(text = 'Search'))
+        top.add_widget(search_button)
         self.add_widget(top)
 
         self.head = GridLayout(rows=1, size_hint_y=0.08)
@@ -64,6 +67,10 @@ class view(GridLayout):#innherit class GridLayout
         self.layout = GridLayout(cols=6, spacing=10, size_hint_y=None)
         self.layout.bind(minimum_height=self.layout.setter('height'))
         self.root.add_widget(self.layout)
+
+        back = Button(text = 'Back', size_hint_y=None, height = 20)
+        back.bind(on_press = self.back_pressed)
+        self.add_widget(back)
 
     def revenue_button_pressed(self, instance):
         self.head.clear_widgets()
@@ -193,3 +200,9 @@ class view(GridLayout):#innherit class GridLayout
         doc = db['files'].find_one({'_id':ObjectId(id)})
         with open('C:\\Users\\anshs\\Desktop\\DOCUMENT'+doc['extension'], 'wb') as file:
             file.write(doc['file_data'])
+
+    def search_pressed(self, instance):
+        search_launch(cid, app, 'search_screen')
+
+    def back_pressed(self, instance):
+        app.screenmanager.current = 'main_menu_screen'

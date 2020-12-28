@@ -4,6 +4,10 @@
 # import FILE
 # with open('README.txt', encoding="utf8") as file:
 #     long_description = file.read()
+import re
+import mysql.connector
+accounts = mysql.connector.connect(host = 'localhost', user = 'root', passwd = 'aaloo', database = 'accounts')
+sql = accounts.cursor()
 import pymongo
 from pymongo import MongoClient
 from bson import ObjectId
@@ -16,9 +20,19 @@ db = client['accounts']
 #
 #
 # print((db['try'].insert_one({'file_data': file_data})).inserted_id)
-id = '5fe95e1e3a3b4744d7cd826f'
-doc = db['files'].find_one({'_id':ObjectId(id)})
-print(doc['extension'])
+string = 'difference'
+pat = re.compile(rf'{string}', re.I)
+results = db.files.find({ "text": {'$regex': pat}})
+
+# if not len(list(results)) == 0:
+for result in results:
+    # print(str(cashflow['_id']))
+    print(result['_id'])
+    sql.execute(f"select distinct k.AMOUNT, k.CASHFLOW_ID, s.TAX, k.DATE_TIME, k.TAX_PAYED, k.ID from keep_in_book k, source_of_cashflow s where k.amount>0 AND k.CASHFLOW_ID = s.CASHFLOW_ID AND k.ID = '{str(result['_id'])}'")
+    cashflow = sql.fetchone()
+    print(cashflow)
+# else:
+#     print("NOPE")
 # with open('C:\\Users\\anshs\\Desktop\\DOCUMENT.png', 'wb') as file:
 #     file.write(file_data)
 #
