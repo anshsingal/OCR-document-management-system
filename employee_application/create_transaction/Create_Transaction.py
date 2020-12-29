@@ -110,27 +110,19 @@ class create_transaction(GridLayout):#innherit class GridLayout
 
     def next_pressed(self, instance):
 
-        time = None
-        set_date = None
+        time = self.time.text
+        set_date = self.date.text
         if self.chosen_cashflow == None:
             self.failed_popup()
             return
 
         if self.time.text == 'Now' or self.time.text == 'now':
             time = datetime.datetime.now().strftime("%H:%M")
-        elif re.match(r"^[0-2][0-9]:[0-5][0-9]", self.time.text):
-            time = self.time.text
-        else:
-            self.failed_popup()
-            return
+
 
         if self.date.text == 'today' or self.date.text == 'Today':
             set_date = datetime.date.today().strftime("%Y-%m-%d")
-        elif re.match(r"^[0-3][0-9]/[0-1][0-9]/[0-2][0-9][0-9][0-9]", self.date.text):
-            set_date = self.date.text
-        else:
-            self.failed_popup()
-            return
+
         date_time = set_date+' '+time
 
         if int(self.amount.text)>0:

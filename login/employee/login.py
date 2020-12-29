@@ -44,6 +44,7 @@ class login_employee(GridLayout):#innherit class GridLayout
         self.add_widget(self.pass_label)
 
         self.password = TextInput()
+        self.password.password = True
         self.add_widget(self.password)
 
         self.register = Button(text = "Register")

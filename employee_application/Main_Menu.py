@@ -39,13 +39,13 @@ class main_menu(GridLayout):#innherit class GridLayout
         self.add_cashflow.bind(on_press = self.add_cashflow_pressed)
         self.add_widget(self.add_cashflow)
 
-        self.create_transaction = Button(text = "Create Transaction")
-        self.create_transaction.bind(on_press = self.create_transaction_pressed)
-        self.add_widget(self.create_transaction)
-
         self.enter_tax_details = Button(text = "Enter Tax Details")
         self.enter_tax_details.bind(on_press = self.enter_tax_details_pressed)
         self.add_widget(self.enter_tax_details)
+
+        self.create_transaction = Button(text = "Create Transaction")
+        self.create_transaction.bind(on_press = self.create_transaction_pressed)
+        self.add_widget(self.create_transaction)
 
         self.summarize = Button(text = "Summarize")
         self.summarize.bind(on_press = self.summarize_pressed)

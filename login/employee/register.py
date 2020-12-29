@@ -72,5 +72,5 @@ class register_employee(GridLayout):#innherit class GridLayout
         app.screenmanager.current = "login_employee_screen"
 
     def back_pressed(self, instance):
-        app.screenmanager.transition = SlideTransition(direction = 'right')
+        # app.screenmanager.transition = SlideTransition(direction = 'right')
         app.screenmanager.current = "login_employee_screen"
