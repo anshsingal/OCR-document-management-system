@@ -21,14 +21,16 @@ client = MongoClient('localhost', 27017)
 db = client['accounts']
 
 class positive_transaction_launch():
-    def __init__(self, main_cashflow, main_book, main_amount, set_date, main_app, screen):
+    def __init__(self, main_cashflow, main_book, main_amount, set_date, main_tax_payed, main_app, screen):
         global app
         global book_no
         global amount
-        global date
+        global date_time
         global cashflow
+        global tax_payed
+        tax_payed = main_tax_payed
         cashflow = main_cashflow
-        date = set_date
+        date_time = set_date
         book_no = main_book
         amount = main_amount
         app = main_app
@@ -54,7 +56,7 @@ class positive_transaction(GridLayout):#innherit class GridLayout
     def button_pressed(self, option):
         self.popup_layout = GridLayout(rows = 2)
         # popup_layout.add_widget(Label(text='Transaction Added'))
-        self.file_chooser = FileChooserIconView(size_hint_y=4, path='C:\\Users\\anshs\\Desktop', multiselect = True)
+        self.file_chooser = FileChooserIconView(size_hint_y=4, path='C:\\Users\\anshs\\Desktop\\study\\5th_sem\\DBD\\project\\bills', multiselect = True)
         self.popup_layout.add_widget(self.file_chooser)
 
         self.close_popup = Button(text = "OK", height = 44)
@@ -74,7 +76,8 @@ class positive_transaction(GridLayout):#innherit class GridLayout
         self.file_path = self.file_chooser.selection
         print(self.file_path)
         id = self.store_documents()
-        sql.execute("INSERT INTO `liability` VALUES (%s, %s, %s, %s)", (str(id), book_no, cashflow, amount))
+        sql.execute("INSERT INTO `liability` VALUES (%s, %s)", (str(id), '-'+amount))
+        sql.execute("INSERT INTO `keep_in_book` VALUES (%s, %s, %s, %s, %s, %s)", (str(id), cashflow, book_no, date_time, amount, tax_payed))
         commit()
         self.go_back()
 
@@ -84,7 +87,8 @@ class positive_transaction(GridLayout):#innherit class GridLayout
         print("you pressed add asset")
         self.file_path = self.file_chooser.selection
         id = self.store_documents()
-        sql.execute("INSERT INTO `asset` VALUES (%s, %s, %s, %s)", (str(id), book_no, cashflow, amount))
+        sql.execute("INSERT INTO `asset` VALUES (%s, %s)", (str(id), amount))
+        sql.execute("INSERT INTO `keep_in_book` VALUES (%s, %s, %s, %s, %s, %s)", (str(id), cashflow, book_no, date_time, amount, tax_payed))
         commit()
         self.go_back()
 
@@ -95,9 +99,13 @@ class positive_transaction(GridLayout):#innherit class GridLayout
         with open(self.file_path[0], 'rb') as file:
             self.data = file.read()
         text = convert(self.file_path[0])
-        id = (db['files'].insert_one({'file_data': self.data, 'text': text})).inserted_id
-        sql.execute("INSERT INTO `revenue` VALUES (%s, %s, %s, %s)", (str(id), book_no, date, amount))
-        commit()
+        if self.file_path[0][-4:] == 'JPEG' or self.file_path[0][-4:] == 'jpeg':
+            self.extension = self.file_path[0][-5:]
+        else:
+            self.extension = self.file_path[0][-4:]
+        id = (db['files'].insert_one({'file_data': self.data, 'text': text, 'extension':self.extension})).inserted_id
+        print(id)
+        # sql.execute("INSERT INTO `revenue` VALUES (%s, %s, %s)", (str(id), amount, tax_payed))
         self.loading_popup.dismiss()
         return id
 

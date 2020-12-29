@@ -106,6 +106,11 @@ class app_home():
         negative_transaction_screen.add_widget(self.negative_transaction_object)
         self.screenmanager.add_widget(negative_transaction_screen)
 
+        self.search_object = search()
+        search_screen = Screen(name = 'search_screen')
+        search_screen.add_widget(self.search_object)
+        self.screenmanager.add_widget(search_screen)
+
 
     def run(self, main_header, main_tab):
         global app
