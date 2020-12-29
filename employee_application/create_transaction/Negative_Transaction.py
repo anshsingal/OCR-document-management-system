@@ -56,7 +56,7 @@ class negative_transaction(GridLayout):#innherit class GridLayout
     def button_pressed(self, option):
         self.popup_layout = GridLayout(rows = 2)
         # popup_layout.add_widget(Label(text='Transaction Added'))
-        self.file_chooser = FileChooserIconView(size_hint_y=4, path='C:\\Users\\anshs\\Desktop', multiselect = True)
+        self.file_chooser = FileChooserIconView(size_hint_y=4, path='C:\\Users\\anshs\\Desktop\\study\\5th_sem\\DBD\\project\\bills', multiselect = True)
         self.popup_layout.add_widget(self.file_chooser)
 
         self.close_popup = Button(text = "OK", height = 44)
@@ -103,7 +103,11 @@ class negative_transaction(GridLayout):#innherit class GridLayout
         with open(self.file_path[0], 'rb') as file:
             self.data = file.read()
         text = convert(self.file_path[0])
-        id = (db['files'].insert_one({'file_data': self.data, 'text': text, 'extension':self.file_path[0][-4:]})).inserted_id
+        if self.file_path[0][-4:] == 'JPEG' or self.file_path[0][-4:] == 'jpeg':
+            self.extension = self.file_path[0][-5:]
+        else:
+            self.extension = self.file_path[0][-4:]
+        id = (db['files'].insert_one({'file_data': self.data, 'text': text, 'extension':self.extension})).inserted_id
         # sql.execute("INSERT INTO `expense` VALUES (%s, %s, %s)", (str(id), amount, tax_payed))
         self.loading_popup.dismiss()
         return id

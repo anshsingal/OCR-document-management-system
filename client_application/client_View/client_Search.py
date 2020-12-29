@@ -22,7 +22,7 @@ from bson import ObjectId
 client = MongoClient('localhost', 27017)
 db = client['accounts']
 
-class search_launch():
+class client_search_launch():
     def __init__(self, main_cid, main_app, screen):
         global app
         global cid
@@ -30,7 +30,7 @@ class search_launch():
         app = main_app
         app.screenmanager.current = screen
 
-class search(GridLayout):#innherit class GridLayout
+class client_search(GridLayout):#innherit class GridLayout
     def __init__(self, **kwargs):#defining constructor for class page
         super().__init__(**kwargs)#defining constructor for class GridLayout
         self.rows = 4
@@ -111,4 +111,4 @@ class search(GridLayout):#innherit class GridLayout
             file.write(doc['file_data'])
 
     def back_pressed(self, instance):
-        app.screenmanager.current = 'view_screen'
+        app.screenmanager.current = 'client_view_screen'

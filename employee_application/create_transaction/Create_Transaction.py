@@ -82,6 +82,8 @@ class create_transaction(GridLayout):#innherit class GridLayout
     def set_tax_payed(self, checkbox, value):
         if value:
             self.tax_payed_selected = 1
+        else:
+            self.tax_payed_selected = 0
 
     def cashflows_button_pressed(self, instance):
         # print(cid)

@@ -20,17 +20,24 @@ db = client['accounts']
 #
 #
 # print((db['try'].insert_one({'file_data': file_data})).inserted_id)
-string = 'difference'
+string = 'canon'
 pat = re.compile(rf'{string}', re.I)
 results = db.files.find({ "text": {'$regex': pat}})
 
-# if not len(list(results)) == 0:
-for result in results:
+
+# for result in results:
     # print(str(cashflow['_id']))
-    print(result['_id'])
-    sql.execute(f"select distinct k.AMOUNT, k.CASHFLOW_ID, s.TAX, k.DATE_TIME, k.TAX_PAYED, k.ID from keep_in_book k, source_of_cashflow s where k.amount>0 AND k.CASHFLOW_ID = s.CASHFLOW_ID AND k.ID = '{str(result['_id'])}'")
-    cashflow = sql.fetchone()
-    print(cashflow)
+    # print(result['_id'])
+    # sql.execute(f"select distinct k.AMOUNT, k.CASHFLOW_ID, s.TAX, k.DATE_TIME, k.TAX_PAYED, k.ID from keep_in_book k, source_of_cashflow s where k.amount>0 AND k.CASHFLOW_ID = s.CASHFLOW_ID AND k.ID = '{str(result['_id'])}'")
+    # cashflow = sql.fetchone()
+    # print(cashflow)
+
+
+sql.execute(f"select * from keep_in_book k, source_of_cashflow s where k.amount>0 AND k.CASHFLOW_ID = s.CASHFLOW_ID AND k.ID = '{str(result['_id'])}'")
+cashflow = sql.fetchone()
+
+
+
 # else:
 #     print("NOPE")
 # with open('C:\\Users\\anshs\\Desktop\\DOCUMENT.png', 'wb') as file:
