@@ -28,5 +28,11 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
     # Runs a single command using the runners shell
-    - name: Send greeting
-      run: echo "Hello ${{ inputs.name }}"
+    - name: call api
+      env: 
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        echo gh api \
+        -H "Accept: application/vnd.github+json" \
+        -H "X-GitHub-Api-Version: 2022-11-28" \
+        /repos/anshsingal/REPO/traffic/clones
