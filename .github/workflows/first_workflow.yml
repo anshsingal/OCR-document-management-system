@@ -1,7 +1,7 @@
 # This is a basic workflow that is manually triggered
 
 name: Manual workflow
-permissions: write-all
+
 
 # Controls when the action will run. Workflow runs when manually triggered using the UI
 # or API.
@@ -24,6 +24,7 @@ jobs:
   # This workflow contains a single job called "greet"
   greet:
     # The type of runner that the job will run on
+    permissions: write-all
     runs-on: ubuntu-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
